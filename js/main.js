@@ -54,33 +54,32 @@ const AD_LOCATION_LNG = {
 const createCardAd = (index) => {
   index = index + 1 < 10 ? `0${index + 1}` : index + 1;
 
-  const author = {
-    avatar: `img/avatars/user${index}.png`,
-  };
-
   const location = {
     lat: getRandomNumberFloat(AD_LOCATION_LAT.min, AD_LOCATION_LAT.max, 5),
     lng: getRandomNumberFloat(AD_LOCATION_LNG.min, AD_LOCATION_LNG.max, 5)
   };
 
-  const offer = {
-    title: 'Уютное гнездышко для молодоженов',
-    address: `${location.lat}, ${location.lng}`,
-    price: getRandomNumberInteger(500, 100000),
-    type: getRandomArrayElement(AD_TYPE),
-    rooms: getRandomNumberInteger(1, 5),
-    guests: getRandomNumberInteger(1, 10),
-    checkin: getRandomArrayElement(AD_TIME),
-    checkout: getRandomArrayElement(AD_TIME),
-    features: AD_FEATURES.slice(0, getRandomNumberInteger(1, AD_FEATURES.length - 1)),
-    description: 'Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.',
-    photos: AD_PHOTOS.slice(0, getRandomNumberInteger(1, AD_PHOTOS.length - 1))
-  };
-
   return {
-    author: author,
-    offer: offer,
-    location: location
+    author: {
+      avatar: `img/avatars/user${index}.png`,
+    },
+    offer: {
+      title: 'Уютное гнездышко для молодоженов',
+      address: `${location.lat}, ${location.lng}`,
+      price: getRandomNumberInteger(500, 100000),
+      type: getRandomArrayElement(AD_TYPE),
+      rooms: getRandomNumberInteger(1, 5),
+      guests: getRandomNumberInteger(1, 10),
+      checkin: getRandomArrayElement(AD_TIME),
+      checkout: getRandomArrayElement(AD_TIME),
+      features: AD_FEATURES.slice(0, getRandomNumberInteger(1, AD_FEATURES.length - 1)),
+      description: 'Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.',
+      photos: AD_PHOTOS.slice(0, getRandomNumberInteger(1, AD_PHOTOS.length - 1))
+    },
+    location: {
+      lat: location.lat,
+      lng: location.lng
+    }
   };
 };
 
