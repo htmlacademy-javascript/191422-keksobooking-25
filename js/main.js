@@ -76,10 +76,7 @@ const createCardAd = (index) => {
       description: 'Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.',
       photos: AD_PHOTOS.slice(0, getRandomNumberInteger(1, AD_PHOTOS.length - 1))
     },
-    location: {
-      lat: location.lat,
-      lng: location.lng
-    }
+    location
   };
 };
 
