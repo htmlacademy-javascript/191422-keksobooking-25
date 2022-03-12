@@ -1,21 +1,89 @@
-const getRandomNumber = (minNum, maxNum) => {
-  if (minNum < 0 || maxNum < 0) {
-    throw new Error('Числа не должны быть отрицательными');
-  }
-  if (minNum > maxNum) {
-    throw new Error('Диапазон "от" и "до" задан неверно');
-  }
-  return minNum + Math.random() * (maxNum - minNum + 1);
+const getRandomNumberInteger = (a, b) => {
+  const minNum = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
+  const maxNum = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
+  return Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
 };
 
-const getRandomNumberInteger = (minNum, maxNum) => {
-  minNum = Math.ceil(minNum);
-  maxNum = Math.floor(maxNum);
-  return Math.floor(getRandomNumber(minNum, maxNum));
+const getRandomNumberFloat = (a, b, decimal = 1) => {
+  const minNum = Math.min(Math.abs(a), Math.abs(b));
+  const maxNum = Math.max(Math.abs(a), Math.abs(b));
+  return parseFloat((Math.random() * (maxNum - minNum) + minNum).toFixed(decimal));
 };
 
-getRandomNumberInteger(1, 10);
+const getRandomArrayElement = (elements) => elements[getRandomNumberInteger(0, elements.length - 1)];
 
-const getRandomNumberFloat = (minNum, maxNum, decimal = 1) => parseFloat(getRandomNumber(minNum, maxNum).toFixed(decimal));
+const AD_TYPE = [
+  'palace',
+  'flat',
+  'house',
+  'bungalow',
+  'hotel'
+];
 
-getRandomNumberFloat(1, 10, 5);
+const AD_TIME = [
+  '12:00',
+  '13:00',
+  '14:00'
+];
+
+const AD_FEATURES = [
+  'wifi',
+  'dishwasher',
+  'parking',
+  'washer',
+  'elevator',
+  'conditioner'
+];
+
+const AD_PHOTOS = [
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
+  'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
+];
+
+const AD_LOCATION_LAT = {
+  min: 35.65000,
+  max: 35.70000
+};
+
+const AD_LOCATION_LNG = {
+  min: 139.70000,
+  max: 139.80000
+};
+
+const createCardAd = (index) => {
+  index = index + 1 < 10 ? `0${index + 1}` : index + 1;
+
+  const author = {
+    avatar: `img/avatars/user${index}.png`,
+  };
+
+  const location = {
+    lat: getRandomNumberFloat(AD_LOCATION_LAT.min, AD_LOCATION_LAT.max, 5),
+    lng: getRandomNumberFloat(AD_LOCATION_LNG.min, AD_LOCATION_LNG.max, 5)
+  };
+
+  const offer = {
+    title: 'Уютное гнездышко для молодоженов',
+    address: `${location.lat}, ${location.lng}`,
+    price: getRandomNumberInteger(500, 100000),
+    type: getRandomArrayElement(AD_TYPE),
+    rooms: getRandomNumberInteger(1, 5),
+    guests: getRandomNumberInteger(1, 10),
+    checkin: getRandomArrayElement(AD_TIME),
+    checkout: getRandomArrayElement(AD_TIME),
+    features: AD_FEATURES.slice(0, getRandomNumberInteger(1, AD_FEATURES.length - 1)),
+    description: 'Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.',
+    photos: AD_PHOTOS.slice(0, getRandomNumberInteger(1, AD_PHOTOS.length - 1))
+  };
+
+  return {
+    author: author,
+    offer: offer,
+    location: location
+  };
+};
+
+const similarCardAds = Array.from({length: 10}, (currentValue, index) => createCardAd(index));
+
+console.log(similarCardAds);
