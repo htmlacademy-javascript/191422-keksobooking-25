@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Иван Жарков](https://up.htmlacademy.ru/javascript/25/user/191422).
-* Наставник: [Виктор Кан](https://htmlacademy.ru/profile/id241239).
+* Наставник: [Илья Саранчев](https://htmlacademy.ru/profile/id1093499).
 
 ---
 
