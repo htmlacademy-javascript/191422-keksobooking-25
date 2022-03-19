@@ -1,6 +1,6 @@
 import {getRandomNumberInteger, getRandomNumberFloat, getRandomArrayElement} from './util.js';
 
-const TYPE = [
+const OFFER_TYPES = [
   'palace',
   'flat',
   'house',
@@ -8,7 +8,7 @@ const TYPE = [
   'hotel'
 ];
 
-const TIME = [
+const CHECK_IN_OUT_TIMES = [
   '12:00',
   '13:00',
   '14:00'
@@ -39,7 +39,7 @@ const LOCATION_LNG = {
   max: 139.80000
 };
 
-const createCardAd = (index) => {
+const createOfferObject = (index) => {
   index = index + 1 < 10 ? `0${index + 1}` : index + 1;
 
   const location = {
@@ -55,11 +55,11 @@ const createCardAd = (index) => {
       title: 'Уютное гнездышко для молодоженов',
       address: `${location.lat}, ${location.lng}`,
       price: getRandomNumberInteger(500, 100000),
-      type: getRandomArrayElement(TYPE),
+      type: getRandomArrayElement(OFFER_TYPES),
       rooms: getRandomNumberInteger(1, 5),
       guests: getRandomNumberInteger(1, 10),
-      checkin: getRandomArrayElement(TIME),
-      checkout: getRandomArrayElement(TIME),
+      checkin: getRandomArrayElement(CHECK_IN_OUT_TIMES),
+      checkout: getRandomArrayElement(CHECK_IN_OUT_TIMES),
       features: FEATURES.slice(0, getRandomNumberInteger(1, FEATURES.length - 1)),
       description: 'Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.',
       photos: PHOTOS.slice(0, getRandomNumberInteger(1, PHOTOS.length - 1))
@@ -68,6 +68,6 @@ const createCardAd = (index) => {
   };
 };
 
-const createCardAds = () => Array.from({length: 10}, (currentValue, index) => createCardAd(index));
+const createOffers = () => Array.from({length: 10}, (currentValue, index) => createOfferObject(index));
 
-export {createCardAds};
+export {createOffers};

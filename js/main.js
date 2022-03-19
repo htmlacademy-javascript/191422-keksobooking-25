@@ -1,3 +1,3 @@
-import {createCardAds} from './data.js';
+import {createOffers} from './data.js';
 
-console.log(createCardAds());
+console.log(createOffers());
