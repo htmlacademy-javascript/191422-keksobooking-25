@@ -52,7 +52,7 @@ const createOfferObject = (index) => {
       avatar: `img/avatars/user${index}.png`,
     },
     offer: {
-      title: '',
+      title: 'Уютное гнездышко для молодоженов',
       address: `${location.lat}, ${location.lng}`,
       price: getRandomNumberInteger(500, 100000),
       type: getRandomArrayElement(Object.keys(OFFER_TYPES)),
