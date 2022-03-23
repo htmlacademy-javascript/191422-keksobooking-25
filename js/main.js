@@ -1,4 +1,8 @@
+import {createOffers} from './data.js';
 import {cardsGenerator} from './card.js';
-const map = document.querySelector('#map-canvas');
 
-map.appendChild(cardsGenerator.createCards().children[0]);
+const map = document.querySelector('#map-canvas');
+const offers = createOffers();
+const offersCards = cardsGenerator.createCards(offers);
+
+map.appendChild(offersCards.children[0]);
