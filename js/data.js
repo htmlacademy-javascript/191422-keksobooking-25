@@ -1,12 +1,12 @@
 import {getRandomNumberInteger, getRandomNumberFloat, getRandomArrayElement} from './util.js';
 
-const OFFER_TYPES = [
-  'palace',
-  'flat',
-  'house',
-  'bungalow',
-  'hotel'
-];
+const OFFER_TYPES = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalow: 'Бунгало',
+  hotel: 'Отель'
+};
 
 const CHECK_IN_OUT_TIMES = [
   '12:00',
@@ -55,7 +55,7 @@ const createOfferObject = (index) => {
       title: 'Уютное гнездышко для молодоженов',
       address: `${location.lat}, ${location.lng}`,
       price: getRandomNumberInteger(500, 100000),
-      type: getRandomArrayElement(OFFER_TYPES),
+      type: getRandomArrayElement(Object.keys(OFFER_TYPES)),
       rooms: getRandomNumberInteger(1, 5),
       guests: getRandomNumberInteger(1, 10),
       checkin: getRandomArrayElement(CHECK_IN_OUT_TIMES),
@@ -70,4 +70,4 @@ const createOfferObject = (index) => {
 
 const createOffers = () => Array.from({length: 10}, (currentValue, index) => createOfferObject(index));
 
-export {createOffers};
+export {createOffers, OFFER_TYPES};
