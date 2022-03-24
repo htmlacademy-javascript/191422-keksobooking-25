@@ -1,5 +1,6 @@
 import {createOffers} from './data.js';
 import {cardsGenerator} from './card.js';
+import './form.js';
 
 const map = document.querySelector('#map-canvas');
 const offers = createOffers();
