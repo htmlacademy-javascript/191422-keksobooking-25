@@ -23,5 +23,4 @@ const setPageActive = () => {
   toggleDisabledElements(filtersForm.children);
 };
 
-setPageInactive();
-setPageActive();
+export {setPageInactive, setPageActive};
