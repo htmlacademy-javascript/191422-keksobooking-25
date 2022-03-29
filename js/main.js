@@ -1,6 +1,7 @@
 import {setPageInactive, setPageActive} from './page.js';
 import {createOffers} from './data.js';
 import {cardsGenerator} from './card.js';
+import './form.js';
 
 setPageInactive();
 setPageActive();
