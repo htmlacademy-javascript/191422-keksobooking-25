@@ -16,7 +16,7 @@ const quantityCapacity = {
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element',
-  errorTextClass: 'ad-form__element__error-text',
+  errorTextClass: 'ad-form__element-error-text',
   errorTextTag: 'p',
 });
 
