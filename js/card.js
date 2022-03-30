@@ -1,13 +1,8 @@
-import {setEndWord} from './util.js';
+import {util} from './util.js';
 import {OFFER_TYPES} from './data.js';
 
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 const cardPhotoTemplate = cardTemplate.querySelector('.popup__photo');
-
-const hideElement = (element) => {
-  element.textContent = '';
-  element.style.display = 'none';
-};
 
 const cardsGenerator = {
   createCards(offers) {
@@ -58,7 +53,7 @@ const cardsGenerator = {
     if (offer.type && OFFER_TYPES[offer.type]) {
       type.textContent = OFFER_TYPES[offer.type];
     } else {
-      hideElement(type);
+      this._hideElement(type);
     }
   },
 
@@ -67,11 +62,11 @@ const cardsGenerator = {
     const result = [];
 
     if (offer.rooms) {
-      result.push(`${offer.rooms} ${setEndWord(offer.rooms, ['комната', 'комнаты', 'комнат'])}`);
+      result.push(`${offer.rooms} ${util.setEndWord(offer.rooms, ['комната', 'комнаты', 'комнат'])}`);
     }
 
     if (offer.guests) {
-      result.push(`для ${offer.guests} ${setEndWord(offer.guests, ['гостя', 'гостей', 'гостей'])}`);
+      result.push(`для ${offer.guests} ${util.setEndWord(offer.guests, ['гостя', 'гостей', 'гостей'])}`);
     }
 
     capacity.textContent = result.join(' ');
@@ -106,7 +101,7 @@ const cardsGenerator = {
         }
       });
     } else {
-      hideElement(features);
+      this._hideElement(features);
     }
   },
 
@@ -116,7 +111,7 @@ const cardsGenerator = {
     if (offer.description) {
       description.textContent = offer.description;
     } else {
-      hideElement(description);
+      this._hideElement(description);
     }
   },
 
@@ -138,6 +133,11 @@ const cardsGenerator = {
   setCardAvatar(card, author) {
     const avatar = card.querySelector('.popup__avatar');
     avatar.src = author.avatar ? author.avatar : 'img/avatars/default.png';
+  },
+
+  _hideElement(element) {
+    element.textContent = '';
+    element.style.display = 'none';
   }
 };
 

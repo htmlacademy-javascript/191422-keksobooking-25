@@ -1,4 +1,4 @@
-import {choicePopupForm} from './form-popup.js';
+import {modalSuccess, modalError} from './form-modal.js';
 
 const form = document.querySelector('.ad-form');
 const fieldTitle = form.querySelector('#title');
@@ -6,7 +6,7 @@ const fieldPrice = form.querySelector('#price');
 const fieldRoom = form.querySelector('#room_number');
 const fieldCapacity = form.querySelector('#capacity');
 
-const quantityCapacity = {
+const QUANTITY_CAPACITY = {
   1: [1],
   2: [1, 2],
   3: [1, 2, 3],
@@ -20,55 +20,59 @@ const pristine = new Pristine(form, {
   errorTextTag: 'p',
 });
 
-const titleValidateLength = (value) => value.length >= 30 && value.length <= 100;
+const validate = {
+  titleLength(value) {
+    return value.length >= 30 && value.length <= 100;
+  },
 
-const priceValidate = (value) => value >= 0 && value <= 100000;
+  price(value) {
+    return value >= 0 && value <= 100000;
+  },
 
-const quantityCapacityValidate = () => {
-  const roomValue = parseInt(fieldRoom.value, 10);
-  const capacityValue = parseInt(fieldCapacity.value, 10);
-
-  return quantityCapacity[roomValue].includes(capacityValue);
+  quantityCapacity() {
+    const roomValue = parseInt(fieldRoom.value, 10);
+    const capacityValue = parseInt(fieldCapacity.value, 10);
+    return QUANTITY_CAPACITY[roomValue].includes(capacityValue);
+  }
 };
 
-const getRoomErrorMessage = () => {
-  const roomValue = parseInt(fieldRoom.value, 10);
-  const capacityValue =  parseInt(fieldCapacity.value, 10);
+const getErrorMessage = {
+  room() {
+    const roomValue = parseInt(fieldRoom.value, 10);
+    const capacityValue =  parseInt(fieldCapacity.value, 10);
+    if (roomValue === 100) {
+      return 'Кол-во комнат не для гостей';
+    }
+    if (capacityValue === 0) {
+      return 'Кол-во комнат должно быть 100';
+    }
+    return 'Кол-во комнат должно быть больше';
+  },
 
-  if (roomValue === 100) {
-    return 'Кол-во комнат не для гостей';
+  capacity() {
+    const roomValue = parseInt(fieldRoom.value, 10);
+    const capacityValue =  parseInt(fieldCapacity.value, 10);
+    if (roomValue === 100) {
+      return 'Кол-во мест не для гостей';
+    }
+    if (capacityValue === 0) {
+      return 'Кол-во комнат должно быть 100';
+    }
+    return 'Кол-во гостей должно быть меньше';
   }
-
-  if (capacityValue === 0) {
-    return 'Кол-во комнат должно быть 100';
-  }
-
-  return 'Кол-во комнат должно быть больше';
 };
 
-const getСapacityErrorMessage = () => {
-  const roomValue = parseInt(fieldRoom.value, 10);
-  const capacityValue =  parseInt(fieldCapacity.value, 10);
-
-  if (roomValue === 100) {
-    return 'Кол-во мест не для гостей';
-  }
-
-  if (capacityValue === 0) {
-    return 'Кол-во комнат должно быть 100';
-  }
-
-  return 'Кол-во гостей должно быть меньше';
-};
-
-pristine.addValidator(fieldTitle, titleValidateLength, 'Длинна заголовка должна быть от 30 до 100 символов', 2, true);
-pristine.addValidator(fieldPrice, priceValidate, 'Цена должна быть от 0 до 100 000', 2, true);
-pristine.addValidator(fieldRoom, quantityCapacityValidate, getRoomErrorMessage);
-pristine.addValidator(fieldCapacity, quantityCapacityValidate, getСapacityErrorMessage);
+pristine.addValidator(fieldTitle, validate.titleLength, 'Длинна заголовка должна быть от 30 до 100 символов', 2, true);
+pristine.addValidator(fieldPrice, validate.price, 'Цена должна быть от 0 до 100 000', 2, true);
+pristine.addValidator(fieldRoom, validate.quantityCapacity, getErrorMessage.room);
+pristine.addValidator(fieldCapacity, validate.quantityCapacity, getErrorMessage.capacity);
 
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
-
   const isValid = pristine.validate();
-  choicePopupForm(isValid);
+  if (isValid) {
+    modalSuccess.open();
+  } else {
+    modalError.open();
+  }
 });

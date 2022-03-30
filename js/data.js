@@ -1,4 +1,4 @@
-import {getRandomNumberInteger, getRandomNumberFloat, getRandomArrayElement} from './util.js';
+import {util} from './util.js';
 
 const OFFER_TYPES = {
   palace: 'Дворец',
@@ -43,8 +43,8 @@ const createOfferObject = (index) => {
   index = index + 1 < 10 ? `0${index + 1}` : index + 1;
 
   const location = {
-    lat: getRandomNumberFloat(LOCATION_LAT.min, LOCATION_LAT.max, 5),
-    lng: getRandomNumberFloat(LOCATION_LNG.min, LOCATION_LNG.max, 5)
+    lat: util.getRandomNumberFloat(LOCATION_LAT.min, LOCATION_LAT.max, 5),
+    lng: util.getRandomNumberFloat(LOCATION_LNG.min, LOCATION_LNG.max, 5)
   };
 
   return {
@@ -54,15 +54,15 @@ const createOfferObject = (index) => {
     offer: {
       title: 'Уютное гнездышко для молодоженов',
       address: `${location.lat}, ${location.lng}`,
-      price: getRandomNumberInteger(500, 100000),
-      type: getRandomArrayElement(Object.keys(OFFER_TYPES)),
-      rooms: getRandomNumberInteger(1, 5),
-      guests: getRandomNumberInteger(1, 10),
-      checkin: getRandomArrayElement(CHECK_IN_OUT_TIMES),
-      checkout: getRandomArrayElement(CHECK_IN_OUT_TIMES),
-      features: FEATURES.slice(0, getRandomNumberInteger(1, FEATURES.length - 1)),
+      price: util.getRandomNumberInteger(500, 100000),
+      type: util.getRandomArrayElement(Object.keys(OFFER_TYPES)),
+      rooms: util.getRandomNumberInteger(1, 5),
+      guests: util.getRandomNumberInteger(1, 10),
+      checkin: util.getRandomArrayElement(CHECK_IN_OUT_TIMES),
+      checkout: util.getRandomArrayElement(CHECK_IN_OUT_TIMES),
+      features: FEATURES.slice(0, util.getRandomNumberInteger(1, FEATURES.length - 1)),
       description: 'Великолепная квартира-студия в центре Токио. Подходит как туристам, так и бизнесменам. Квартира полностью укомплектована и недавно отремонтирована.',
-      photos: PHOTOS.slice(0, getRandomNumberInteger(1, PHOTOS.length - 1))
+      photos: PHOTOS.slice(0, util.getRandomNumberInteger(1, PHOTOS.length - 1))
     },
     location
   };
