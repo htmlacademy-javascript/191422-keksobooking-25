@@ -20,24 +20,24 @@ const pristine = new Pristine(form, {
   errorTextTag: 'p',
 });
 
-const validate = {
-  titleLength(value) {
+const validator = {
+  isTitileLengthValid(value) {
     return value.length >= 30 && value.length <= 100;
   },
 
-  price(value) {
+  isPriceValid(value) {
     return value >= 0 && value <= 100000;
   },
 
-  quantityCapacity() {
+  isQuantityCapacityValid() {
     const roomValue = parseInt(fieldRoom.value, 10);
     const capacityValue = parseInt(fieldCapacity.value, 10);
     return QUANTITY_CAPACITY[roomValue].includes(capacityValue);
   }
 };
 
-const getErrorMessage = {
-  room() {
+const errorMessage = {
+  getRoomText() {
     const roomValue = parseInt(fieldRoom.value, 10);
     const capacityValue =  parseInt(fieldCapacity.value, 10);
     if (roomValue === 100) {
@@ -49,7 +49,7 @@ const getErrorMessage = {
     return 'Кол-во комнат должно быть больше';
   },
 
-  capacity() {
+  getCapacityText() {
     const roomValue = parseInt(fieldRoom.value, 10);
     const capacityValue =  parseInt(fieldCapacity.value, 10);
     if (roomValue === 100) {
@@ -62,10 +62,10 @@ const getErrorMessage = {
   }
 };
 
-pristine.addValidator(fieldTitle, validate.titleLength, 'Длинна заголовка должна быть от 30 до 100 символов', 2, true);
-pristine.addValidator(fieldPrice, validate.price, 'Цена должна быть от 0 до 100 000', 2, true);
-pristine.addValidator(fieldRoom, validate.quantityCapacity, getErrorMessage.room);
-pristine.addValidator(fieldCapacity, validate.quantityCapacity, getErrorMessage.capacity);
+pristine.addValidator(fieldTitle, validator.isTitileLengthValid, 'Длинна заголовка должна быть от 30 до 100 символов', 2, true);
+pristine.addValidator(fieldPrice, validator.isPriceValid, 'Цена должна быть от 0 до 100 000', 2, true);
+pristine.addValidator(fieldRoom, validator.isQuantityCapacityValid, errorMessage.getRoomText);
+pristine.addValidator(fieldCapacity, validator.isQuantityCapacityValid, errorMessage.getCapacityText);
 
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
