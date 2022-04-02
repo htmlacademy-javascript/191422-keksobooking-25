@@ -24,6 +24,8 @@ const OFFER_TYPES_PRICE_MIN = {
   palace: 10000
 };
 
+const MAX_PRICE = 100000;
+
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element',
@@ -76,8 +78,7 @@ const errorMessage = {
 
   getPriceText() {
     const offerTypeValue = fieldType.value;
-    const formatter = new Intl.NumberFormat('ru');
-    return `Цена должна быть от ${formatter.format(OFFER_TYPES_PRICE_MIN[offerTypeValue])} до 100 000`;
+    return `Цена должна быть от ${OFFER_TYPES_PRICE_MIN[offerTypeValue].toLocaleString()} до ${MAX_PRICE.toLocaleString()}`;
   }
 };
 
