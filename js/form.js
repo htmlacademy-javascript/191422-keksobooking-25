@@ -41,7 +41,7 @@ const validator = {
   isPriceValid() {
     const priceValue = parseInt(fieldPrice.value, 10);
     const offerTypeValue = fieldType.value;
-    return priceValue >= OFFER_TYPES_PRICE_MIN[offerTypeValue] && priceValue <= 100000;
+    return priceValue >= OFFER_TYPES_PRICE_MIN[offerTypeValue] && priceValue <= MAX_PRICE;
   },
 
   isQuantityCapacityValid() {
