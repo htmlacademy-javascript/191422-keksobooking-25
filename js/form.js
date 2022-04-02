@@ -87,10 +87,10 @@ pristine.addValidator(fieldRoom, validator.isQuantityCapacityValid, errorMessage
 pristine.addValidator(fieldCapacity, validator.isQuantityCapacityValid, errorMessage.getCapacityText);
 
 fieldType.addEventListener('change', (evt) => {
-  pristine.validate(fieldPrice);
   const priceMinValue = OFFER_TYPES_PRICE_MIN[evt.target.value];
   fieldPrice.min = priceMinValue;
   fieldPrice.placeholder = priceMinValue;
+  pristine.validate(fieldPrice);
 });
 
 fieldTimeIn.addEventListener('change', (evt) => {
