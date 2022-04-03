@@ -8,6 +8,7 @@ const fieldCapacity = form.querySelector('#capacity');
 const fieldType = form.querySelector('#type');
 const fieldTimeIn = form.querySelector('#timein');
 const fieldTimeOut = form.querySelector('#timeout');
+const sliderElement = form.querySelector('.ad-form__slider');
 
 const QUANTITY_CAPACITY = {
   1: [1],
@@ -91,6 +92,13 @@ fieldType.addEventListener('change', (evt) => {
   const priceMinValue = OFFER_TYPES_PRICE_MIN[evt.target.value];
   fieldPrice.min = priceMinValue;
   fieldPrice.placeholder = priceMinValue;
+  sliderElement.noUiSlider.updateOptions({
+    range: {
+      min: priceMinValue,
+      max: MAX_PRICE,
+    },
+    step: 1
+  });
   pristine.validate(fieldPrice);
 });
 
@@ -100,6 +108,24 @@ fieldTimeIn.addEventListener('change', (evt) => {
 
 fieldTimeOut.addEventListener('change', (evt) => {
   fieldTimeIn.value = evt.target.value;
+});
+
+noUiSlider.create(sliderElement, {
+  range: {
+    min: 0,
+    max: MAX_PRICE,
+  },
+  start: 1000,
+  step: 1,
+  connect: 'lower',
+  format: {
+    to: (value) => value.toFixed(0),
+    from: (value) => parseFloat(value)
+  },
+});
+
+sliderElement.noUiSlider.on('update', () => {
+  fieldPrice.value = sliderElement.noUiSlider.get();
 });
 
 form.addEventListener('submit', (evt) => {

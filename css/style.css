@@ -666,6 +666,11 @@ fieldset {
           box-shadow: 0 0 2px 2px #ff6547;
 }
 
+.ad-form__element-error-text {
+  font-size: 12px;
+  color: #cc0000;
+}
+
 
 /* Футер
    ========================================================================== */

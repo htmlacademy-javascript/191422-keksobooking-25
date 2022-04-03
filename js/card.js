@@ -44,7 +44,7 @@ const cardsGenerator = {
 
   setCardPrice(card, offer) {
     const price = card.querySelector('.popup__text--price');
-    price.innerHTML = offer.price ? `${offer.price} <span>₽/ночь</span>` : 'Цена не указана';
+    price.innerHTML = offer.price ? `${offer.price.toLocaleString()} <span>₽/ночь</span>` : 'Цена не указана';
   },
 
   setCardType(card, offer) {
