@@ -1,13 +1,17 @@
 import {page} from './page.js';
-import {createOffers} from './data.js';
-import {cardsGenerator} from './card.js';
 import './form.js';
+import {createOffers} from './data.js';
+import {Map} from './map.js';
+
+const init = () => {
+  const offers = createOffers();
+  new Map('map-canvas', offers);
+};
 
 page.setInactive();
-page.setActive();
 
-const map = document.querySelector('#map-canvas');
-const offers = createOffers();
-const offersCards = cardsGenerator.createCards(offers);
-
-map.appendChild(offersCards.children[0]);
+if (document.readyState === 'interactive' || document.readyState === 'complete') {
+  init();
+} else {
+  document.addEventListener('DOMContentLoaded', init);
+}
