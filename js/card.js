@@ -1,5 +1,12 @@
 import {util} from './util.js';
-import {OFFER_TYPES} from './data.js';
+
+const OFFER_TYPES = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalow: 'Бунгало',
+  hotel: 'Отель'
+};
 
 const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
 const cardPhotoTemplate = cardTemplate.querySelector('.popup__photo');
@@ -91,7 +98,7 @@ const cardsGenerator = {
     const features = card.querySelector('.popup__features');
     const featuresList = features.querySelectorAll('.popup__feature');
 
-    if (offer.features.length > 0) {
+    if (offer.features) {
       const featuresmModifiers = offer.features.map((feature) => `popup__feature--${feature}`);
       featuresList.forEach((featureItem) => {
         const modifier = featureItem.classList[1];
@@ -117,17 +124,22 @@ const cardsGenerator = {
 
   setCardPhotos(card, offer) {
     const photos = card.querySelector('.popup__photos');
-    const cardPhotosFragment = document.createDocumentFragment();
 
-    photos.textContent = '';
+    if (offer.photos) {
+      const cardPhotosFragment = document.createDocumentFragment();
 
-    offer.photos.forEach((photoSrc) => {
-      const cardPhotoElement = cardPhotoTemplate.cloneNode(true);
-      cardPhotoElement.src = photoSrc;
-      cardPhotosFragment.appendChild(cardPhotoElement);
-    });
+      photos.textContent = '';
 
-    photos.appendChild(cardPhotosFragment);
+      offer.photos.forEach((photoSrc) => {
+        const cardPhotoElement = cardPhotoTemplate.cloneNode(true);
+        cardPhotoElement.src = photoSrc;
+        cardPhotosFragment.appendChild(cardPhotoElement);
+      });
+
+      photos.appendChild(cardPhotosFragment);
+    } else {
+      this._hideElement(photos);
+    }
   },
 
   setCardAvatar(card, author) {

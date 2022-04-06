@@ -1,4 +1,5 @@
 import {modalSuccess, modalError} from './form-modal.js';
+import {sendData} from './api.js';
 
 const form = document.querySelector('.ad-form');
 const fieldTitle = form.querySelector('#title');
@@ -9,6 +10,8 @@ const fieldType = form.querySelector('#type');
 const fieldTimeIn = form.querySelector('#timein');
 const fieldTimeOut = form.querySelector('#timeout');
 const sliderElement = form.querySelector('.ad-form__slider');
+const buttonSubmit = form.querySelector('button[type="submit"]');
+const buttonReset = form.querySelector('button[type="reset"]');
 
 const QUANTITY_CAPACITY = {
   1: [1],
@@ -26,6 +29,28 @@ const OFFER_TYPES_PRICE_MIN = {
 };
 
 const MAX_PRICE = 100000;
+
+const blockSubmitButton = () => {
+  buttonSubmit.disabled = true;
+  buttonSubmit.textContent = 'Отправляю...';
+};
+
+const unblockSubmitButton = () => {
+  buttonSubmit.disabled = false;
+  buttonSubmit.textContent = 'Опубликовать';
+};
+
+const onResetForm = (evt) => {
+  evt.preventDefault();
+  form.reset();
+  sliderElement.noUiSlider.updateOptions({
+    range: {
+      min: 0,
+      max: MAX_PRICE,
+    },
+    step: 1
+  });
+};
 
 const pristine = new Pristine(form, {
   classTo: 'ad-form__element',
@@ -128,12 +153,23 @@ sliderElement.noUiSlider.on('update', () => {
   fieldPrice.value = sliderElement.noUiSlider.get();
 });
 
+buttonReset.addEventListener('click', onResetForm);
+
 form.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   if (isValid) {
-    modalSuccess.open();
-  } else {
-    modalError.open();
+    blockSubmitButton();
+    sendData(
+      () => {
+        modalSuccess.open();
+        unblockSubmitButton();
+      },
+      () => {
+        modalError.open();
+        unblockSubmitButton();
+      },
+      new FormData(evt.target)
+    );
   }
 });

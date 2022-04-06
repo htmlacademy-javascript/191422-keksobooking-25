@@ -9,11 +9,13 @@ const CENTER_MAP = {
 };
 
 class Map {
-  constructor(canvasSelector, offers) {
+  constructor(canvasSelector) {
     this._map = this._createMap(canvasSelector);
+    this._markerGroup = L.layerGroup().addTo(this._map);
+    this._mainPinMarker = this._addMainMarker();
     this._setTileLayers();
-    this._addMainMarker();
-    this._addOfferMarkers(offers);
+    // this._addMainMarker();
+    // this._addOfferMarkers(offers, markerGroup);
   }
 
   _createMap(canvasSelector) {
@@ -52,11 +54,11 @@ class Map {
       const location = evt.target.getLatLng();
       fieldAddress.value = `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
     });
+
+    return mainPinMarker;
   }
 
-  _addOfferMarkers(offers) {
-    const markerGroup = L.layerGroup().addTo(this._map);
-
+  addOfferMarkers(offers) {
     const offerPinIcon = L.icon({
       iconUrl: './img/pin.svg',
       iconSize: [40, 40],
@@ -69,12 +71,21 @@ class Map {
         {offerPinIcon},
       );
 
-      marker.addTo(markerGroup).bindPopup(cardsGenerator.createSingleCard(offer));
+      marker.addTo(this._markerGroup).bindPopup(cardsGenerator.createSingleCard(offer));
     };
 
     offers.forEach((offer) => {
       createMarker(offer);
     });
+  }
+
+  removeOfferMarkers() {
+    this._markerGroup.clearLayers();
+  }
+
+  resetMap() {
+    this._map.setView(CENTER_MAP, 12);
+    this._mainPinMarker.setLatLng(CENTER_MAP);
   }
 }
 
