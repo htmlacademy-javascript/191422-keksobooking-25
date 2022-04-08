@@ -1,5 +1,3 @@
-import {cardsGenerator} from './card.js';
-
 const CENTER_MAP = {
   lat: 35.66322,
   lng: 139.77938
@@ -74,34 +72,13 @@ class Map {
         {offerPinIcon},
       );
 
-      marker.addTo(this._markerGroup).bindPopup(cardsGenerator.createSingleCard(offer));
+      marker.addTo(this._markerGroup).bindPopup(offer.card);
     };
 
     offers.forEach((offer) => {
       createMarker(offer);
     });
   }
-
-  // addOfferMarkers(offers, cb) {
-  //   const offerPinIcon = L.icon({
-  //     iconUrl: './img/pin.svg',
-  //     iconSize: [40, 40],
-  //     iconAnchor: [20, 40]
-  //   });
-
-  //   const createMarker = (offer) => {
-  //     const marker = L.marker(
-  //       offer.location,
-  //       {offerPinIcon},
-  //     );
-
-  //     marker.addTo(this._markerGroup).bindPopup(cb(offer));
-  //   };
-
-  //   offers.forEach((offer) => {
-  //     createMarker(offer, cb);
-  //   });
-  // }
 
   removeOfferMarkers() {
     this._markerGroup.clearLayers();

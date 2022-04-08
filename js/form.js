@@ -143,6 +143,48 @@ sliderElement.noUiSlider.on('update', () => {
 });
 
 const form = {
+  _onSubmitCallback: [],
+  _onResetCallback: [],
+
+  init() {
+    noticeForm.addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      if (!pristine.validate()) {
+        return;
+      }
+      blockSubmitButton();
+      sendData(() => this._onSubmitSuccess(), () => this._onSubmitError(), new FormData(evt.target));
+    });
+
+    buttonReset.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      this._onReset();
+    });
+  },
+
+  _onSubmitSuccess() {
+    modalSuccess.open();
+    this._onSubmitCallback.forEach((cb) => cb());
+    unblockSubmitButton();
+  },
+
+  _onSubmitError() {
+    modalError.open();
+    unblockSubmitButton();
+  },
+
+  _onReset() {
+    this._onResetCallback.forEach((cb) => cb());
+  },
+
+  onSubmit(cb) {
+    this._onSubmitCallback.push(cb);
+  },
+
+  onResetRequest(cb) {
+    this._onResetCallback.push(cb);
+  },
+
   reset() {
     noticeForm.reset();
     sliderElement.noUiSlider.updateOptions({
@@ -150,36 +192,8 @@ const form = {
         min: 0,
         max: MAX_PRICE,
       },
+      start: 1000,
       step: 1
-    });
-  },
-
-  onResetRequest(cb) {
-    buttonReset.addEventListener('click', (evt) => {
-      evt.preventDefault();
-      cb();
-    });
-  },
-
-  onSubmit(cb) {
-    noticeForm.addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      const isValid = pristine.validate();
-      if (isValid) {
-        blockSubmitButton();
-        sendData(
-          () => {
-            modalSuccess.open();
-            cb();
-            unblockSubmitButton();
-          },
-          () => {
-            modalError.open();
-            unblockSubmitButton();
-          },
-          new FormData(evt.target)
-        );
-      }
     });
   },
 
