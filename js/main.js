@@ -10,7 +10,9 @@ page.setInactive();
 const init = () => {
   const map = new Map('map-canvas');
 
-  const addOfferMap = () => {
+  const getOffers = async () => await getData((data) => data, util.showAlert);
+
+  const addOfferMap = (offers) => {
     const createPopup = (offer) => {
       const popup = {};
       popup.card = cardsGenerator.createSingleCard(offer);
@@ -19,16 +21,13 @@ const init = () => {
       return popup;
     };
 
-    const onLoadedOffers = (data) => {
-      const popups = data.slice(0, 10).map(createPopup);
-      map.addOfferMarkers(popups);
-    };
-
-    getData(onLoadedOffers, util.showAlert);
+    const popups = offers.slice(0, 10).map(createPopup);
+    map.addOfferMarkers(popups);
   };
 
-  const activationPage = () => {
-    addOfferMap();
+  const activationPage = async () => {
+    const offers = await getOffers();
+    addOfferMap(offers);
     page.setActive();
     form.setAddress(map.getCurrentPosition());
     form.init();
@@ -43,10 +42,10 @@ const init = () => {
   map.onLoad(activationPage);
   form.onResetRequest(resetPage);
   form.onSubmit(resetPage);
-
   map.onSelectPosition(() => {
     form.setAddress(map.getCurrentPosition());
   });
+  map.render();
 };
 
 if (document.readyState === 'interactive' || document.readyState === 'complete') {

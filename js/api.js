@@ -1,35 +1,36 @@
-const getData = (onSuccess, onError) => {
-  fetch('https://25.javascript.pages.academy/keksobooking/data')
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
+const getData = async (onSuccess, onError) => {
+  let response;
 
-      throw new Error(`${response.statusText} - Произошла ошибка, попробуйте перезагрузить страницу`);
-    })
-    .then((data) => {
-      onSuccess(data);
-    })
-    .catch((err) => {
-      onError(err);
-    });
+  try {
+    response = await fetch('https://25.javascript.pages.academy/keksobooking/data');
+
+    if (response && response.ok) {
+      return onSuccess(await response.json());
+    }
+
+    throw new Error(`${response.statusText} - Произошла ошибка, попробуйте перезагрузить страницу`);
+  } catch (err) {
+    onError(err);
+  }
 };
 
-const sendData = (onSuccess, onError, body) => {
-  fetch('https://25.javascript.pages.academy/keksobooking', {
-    method: 'POST',
-    body,
-  })
-    .then((response) => {
-      if (response.ok) {
-        onSuccess();
-      } else {
-        onError('Не удалось отправить форму. Попробуйте ещё раз');
-      }
-    })
-    .catch(() => {
-      onError('Не удалось отправить форму. Попробуйте ещё раз');
+const sendData = async (onSuccess, onError, body) => {
+  let response;
+
+  try {
+    response = await fetch('https://25.javascript.pages.academy/keksobooking', {
+      method: 'POST',
+      body,
     });
+
+    if (response && response.ok) {
+      return onSuccess();
+    }
+
+    throw new Error(`${response.statusText} - Не удалось отправить форму. Попробуйте ещё раз`);
+  } catch (err) {
+    onError(err);
+  }
 };
 
 export {getData, sendData};

@@ -6,8 +6,6 @@ const CENTER_MAP = {
 class Map {
   constructor(canvasSelector) {
     this._map = this._createMap(canvasSelector);
-    this._onLoadMap();
-    this._setCenterMap();
     this._markerGroup = L.layerGroup().addTo(this._map);
     this._mainPinMarker = this._addMainMarker();
     this._setTileLayers();
@@ -15,14 +13,6 @@ class Map {
 
   _createMap(canvasSelector) {
     return L.map(canvasSelector);
-  }
-
-  _onLoadMap() {
-    this._map.on('load', this._onLoadMapCallback);
-  }
-
-  _setCenterMap() {
-    this._map.setView(CENTER_MAP, 12);
   }
 
   _setTileLayers() {
@@ -52,12 +42,8 @@ class Map {
     return mainPinMarker;
   }
 
-  _onLoadMapCallback() {
-    return this.onLoad;
-  }
-
   onLoad(cb) {
-    cb();
+    this._map.on('load', () => cb());
   }
 
   onSelectPosition(cb) {
@@ -91,6 +77,10 @@ class Map {
 
   removeOfferMarkers() {
     this._markerGroup.clearLayers();
+  }
+
+  render() {
+    this._map.setView(CENTER_MAP, 12);
   }
 
   reset() {
