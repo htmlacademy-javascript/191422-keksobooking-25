@@ -16,13 +16,10 @@ const getData = (onSuccess, onError) => {
 };
 
 const sendData = (onSuccess, onError, body) => {
-  fetch(
-    'https://25.javascript.pages.academy/keksobooking',
-    {
-      method: 'POST',
-      body,
-    },
-  )
+  fetch('https://25.javascript.pages.academy/keksobooking', {
+    method: 'POST',
+    body,
+  })
     .then((response) => {
       if (response.ok) {
         onSuccess();
