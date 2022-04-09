@@ -1,14 +1,18 @@
 import {modalSuccess, modalError} from './form-modal.js';
+import {sendData} from './api.js';
 
-const form = document.querySelector('.ad-form');
-const fieldTitle = form.querySelector('#title');
-const fieldPrice = form.querySelector('#price');
-const fieldRoom = form.querySelector('#room_number');
-const fieldCapacity = form.querySelector('#capacity');
-const fieldType = form.querySelector('#type');
-const fieldTimeIn = form.querySelector('#timein');
-const fieldTimeOut = form.querySelector('#timeout');
-const sliderElement = form.querySelector('.ad-form__slider');
+const noticeForm = document.querySelector('.ad-form');
+const fieldTitle = noticeForm.querySelector('#title');
+const fieldPrice = noticeForm.querySelector('#price');
+const fieldRoom = noticeForm.querySelector('#room_number');
+const fieldCapacity = noticeForm.querySelector('#capacity');
+const fieldType = noticeForm.querySelector('#type');
+const fieldTimeIn = noticeForm.querySelector('#timein');
+const fieldTimeOut = noticeForm.querySelector('#timeout');
+const fieldAddress = document.querySelector('#address');
+const sliderElement = noticeForm.querySelector('.ad-form__slider');
+const buttonSubmit = noticeForm.querySelector('button[type="submit"]');
+const buttonReset = noticeForm.querySelector('button[type="reset"]');
 
 const QUANTITY_CAPACITY = {
   1: [1],
@@ -27,7 +31,17 @@ const OFFER_TYPES_PRICE_MIN = {
 
 const MAX_PRICE = 100000;
 
-const pristine = new Pristine(form, {
+const blockSubmitButton = () => {
+  buttonSubmit.disabled = true;
+  buttonSubmit.textContent = 'Отправляю...';
+};
+
+const unblockSubmitButton = () => {
+  buttonSubmit.disabled = false;
+  buttonSubmit.textContent = 'Опубликовать';
+};
+
+const pristine = new Pristine(noticeForm, {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element',
   errorTextClass: 'ad-form__element-error-text',
@@ -128,12 +142,64 @@ sliderElement.noUiSlider.on('update', () => {
   fieldPrice.value = sliderElement.noUiSlider.get();
 });
 
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
-  if (isValid) {
+const form = {
+  _onSubmitCallback: [],
+  _onResetCallback: [],
+
+  init() {
+    noticeForm.addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      if (!pristine.validate()) {
+        return;
+      }
+      blockSubmitButton();
+      sendData(() => this._onSubmitSuccess(), () => this._onSubmitError(), new FormData(evt.target));
+    });
+
+    buttonReset.addEventListener('click', (evt) => {
+      evt.preventDefault();
+      this._onReset();
+    });
+  },
+
+  _onSubmitSuccess() {
     modalSuccess.open();
-  } else {
+    this._onSubmitCallback.forEach((cb) => cb());
+    unblockSubmitButton();
+  },
+
+  _onSubmitError() {
     modalError.open();
+    unblockSubmitButton();
+  },
+
+  _onReset() {
+    this._onResetCallback.forEach((cb) => cb());
+  },
+
+  onSubmit(cb) {
+    this._onSubmitCallback.push(cb);
+  },
+
+  onResetRequest(cb) {
+    this._onResetCallback.push(cb);
+  },
+
+  reset() {
+    noticeForm.reset();
+    sliderElement.noUiSlider.updateOptions({
+      range: {
+        min: 0,
+        max: MAX_PRICE,
+      },
+      start: 1000,
+      step: 1
+    });
+  },
+
+  setAddress(coordinate) {
+    fieldAddress.value = `${coordinate.lat.toFixed(5)}, ${coordinate.lng.toFixed(5)}`;
   }
-});
+};
+
+export {form};

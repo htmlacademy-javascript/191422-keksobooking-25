@@ -1,27 +1,18 @@
-import {page} from './page.js';
-import {cardsGenerator} from './card.js';
-
-const fieldAddress = document.querySelector('#address');
-
 const CENTER_MAP = {
   lat: 35.66322,
   lng: 139.77938
 };
 
 class Map {
-  constructor(canvasSelector, offers) {
+  constructor(canvasSelector) {
     this._map = this._createMap(canvasSelector);
+    this._markerGroup = L.layerGroup().addTo(this._map);
+    this._mainPinMarker = this._addMainMarker();
     this._setTileLayers();
-    this._addMainMarker();
-    this._addOfferMarkers(offers);
   }
 
   _createMap(canvasSelector) {
-    const onLoadMap = () => {
-      page.setActive();
-      fieldAddress.value = `${CENTER_MAP.lat}, ${CENTER_MAP.lng}`;
-    };
-    return L.map(canvasSelector).on('load', onLoadMap).setView(CENTER_MAP, 12);
+    return L.map(canvasSelector);
   }
 
   _setTileLayers() {
@@ -48,15 +39,22 @@ class Map {
 
     mainPinMarker.addTo(this._map);
 
-    mainPinMarker.on('moveend', (evt) => {
-      const location = evt.target.getLatLng();
-      fieldAddress.value = `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`;
-    });
+    return mainPinMarker;
   }
 
-  _addOfferMarkers(offers) {
-    const markerGroup = L.layerGroup().addTo(this._map);
+  onLoad(cb) {
+    this._map.on('load', () => cb());
+  }
 
+  onSelectPosition(cb) {
+    this._mainPinMarker.on('moveend', () => cb());
+  }
+
+  getCurrentPosition() {
+    return this._mainPinMarker.getLatLng();
+  }
+
+  addOfferMarkers(offers) {
     const offerPinIcon = L.icon({
       iconUrl: './img/pin.svg',
       iconSize: [40, 40],
@@ -69,12 +67,26 @@ class Map {
         {offerPinIcon},
       );
 
-      marker.addTo(markerGroup).bindPopup(cardsGenerator.createSingleCard(offer));
+      marker.addTo(this._markerGroup).bindPopup(offer.card);
     };
 
     offers.forEach((offer) => {
       createMarker(offer);
     });
+  }
+
+  removeOfferMarkers() {
+    this._markerGroup.clearLayers();
+  }
+
+  render() {
+    this._map.setView(CENTER_MAP, 12);
+  }
+
+  reset() {
+    this._map.closePopup();
+    this._map.setView(CENTER_MAP, 12);
+    this._mainPinMarker.setLatLng(CENTER_MAP);
   }
 }
 
