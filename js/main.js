@@ -4,39 +4,51 @@ import {cardsGenerator} from './card.js';
 import {getData} from './api.js';
 import {form} from './form.js';
 import {Map} from './map.js';
+import {filter} from './filter.js';
 
 page.setInactive();
 
-const init = () => {
+const init = async () => {
   const map = new Map('map-canvas');
 
   const getOffers = async () => await getData((data) => data, util.showAlert);
+  const dataOffers = await getOffers();
 
-  const addOfferMap = (offers) => {
-    const createPopup = (offer) => {
-      const popup = {};
-      popup.card = cardsGenerator.createSingleCard(offer);
-      popup.location = offer.location;
+  const createPopup = (offer) => {
+    const popup = {};
+    popup.card = cardsGenerator.createSingleCard(offer);
+    popup.location = offer.location;
 
-      return popup;
-    };
+    return popup;
+  };
 
+  const addOfferToMap = (offers) => {
     const popups = offers.slice(0, 10).map(createPopup);
     map.addOfferMarkers(popups);
   };
 
-  const activationPage = async () => {
-    const offers = await getOffers();
-    addOfferMap(offers);
-    page.setActive();
+  const activationPage = () => {
+    addOfferToMap(dataOffers);
     form.setAddress(map.getCurrentPosition());
     form.init();
+    filter.init();
+    page.setActive();
   };
 
   const resetPage = () => {
     form.reset();
     map.reset();
     form.setAddress(map.getCurrentPosition());
+  };
+
+  const applyFilter = () => {
+    const result = filter.check(dataOffers);
+    map.removeOfferMarkers();
+    if (result.length > 0) {
+      addOfferToMap(result);
+    } else {
+      util.showAlert('По запросу ничего не найдено, измените настройки фильтра');
+    }
   };
 
   map.onLoad(activationPage);
@@ -46,6 +58,7 @@ const init = () => {
     form.setAddress(map.getCurrentPosition());
   });
   map.render();
+  filter.onChange(util.debounce(applyFilter, 500));
 };
 
 if (document.readyState === 'interactive' || document.readyState === 'complete') {
