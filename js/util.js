@@ -48,7 +48,16 @@ const util = {
 
     setTimeout(() => {
       alertContainer.remove();
-    }, 10000);
+    }, 5000);
+  },
+
+  debounce(callback, timeoutDelay = 500) {
+    let timeoutId;
+
+    return (...rest) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+    };
   }
 };
 

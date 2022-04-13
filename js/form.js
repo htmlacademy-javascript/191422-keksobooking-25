@@ -9,7 +9,11 @@ const fieldCapacity = noticeForm.querySelector('#capacity');
 const fieldType = noticeForm.querySelector('#type');
 const fieldTimeIn = noticeForm.querySelector('#timein');
 const fieldTimeOut = noticeForm.querySelector('#timeout');
-const fieldAddress = document.querySelector('#address');
+const fieldAddress = noticeForm.querySelector('#address');
+const fieldAvatar = noticeForm.querySelector('#avatar');
+const fieldImages = noticeForm.querySelector('#images');
+const avatarImg = noticeForm.querySelector('.ad-form-header__preview img');
+const photoContainer = noticeForm.querySelector('.ad-form__photo');
 const sliderElement = noticeForm.querySelector('.ad-form__slider');
 const buttonSubmit = noticeForm.querySelector('button[type="submit"]');
 const buttonReset = noticeForm.querySelector('button[type="reset"]');
@@ -29,6 +33,8 @@ const OFFER_TYPES_PRICE_MIN = {
   palace: 10000
 };
 
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
 const MAX_PRICE = 100000;
 
 const blockSubmitButton = () => {
@@ -42,8 +48,8 @@ const unblockSubmitButton = () => {
 };
 
 const pristine = new Pristine(noticeForm, {
-  classTo: 'ad-form__element',
-  errorTextParent: 'ad-form__element',
+  classTo: 'validate-container',
+  errorTextParent: 'validate-container',
   errorTextClass: 'ad-form__element-error-text',
   errorTextTag: 'p',
 });
@@ -63,6 +69,11 @@ const validator = {
     const roomValue = parseInt(fieldRoom.value, 10);
     const capacityValue = parseInt(fieldCapacity.value, 10);
     return QUANTITY_CAPACITY[roomValue].includes(capacityValue);
+  },
+
+  isImageValid(file) {
+    const fileName = file.name.toLowerCase();
+    return FILE_TYPES.some((it) => fileName.endsWith(it));
   }
 };
 
@@ -94,6 +105,10 @@ const errorMessage = {
   getPriceText() {
     const offerTypeValue = fieldType.value;
     return `Цена должна быть от ${OFFER_TYPES_PRICE_MIN[offerTypeValue].toLocaleString()} до ${MAX_PRICE.toLocaleString()}`;
+  },
+
+  getImageText() {
+    return `Файл должен быть в формате ${FILE_TYPES.join(', ')}`;
   }
 };
 
@@ -140,6 +155,36 @@ noUiSlider.create(sliderElement, {
 
 sliderElement.noUiSlider.on('update', () => {
   fieldPrice.value = sliderElement.noUiSlider.get();
+});
+
+fieldAvatar.addEventListener('change', (evt) => {
+  const file = evt.target.files[0];
+  const matches = validator.isImageValid(file);
+
+  if (matches) {
+    avatarImg.src = URL.createObjectURL(file);
+  } else {
+    pristine.addError(fieldAvatar, errorMessage.getImageText());
+  }
+});
+
+fieldImages.addEventListener('change', (evt) => {
+  const file = evt.target.files[0];
+  const matches = validator.isImageValid(file);
+
+  if (matches) {
+    const img = document.createElement('img');
+
+    img.width = 70;
+    img.height = 70;
+    img.src = URL.createObjectURL(file);
+    img.alt = '';
+
+    photoContainer.innerHTML = '';
+    photoContainer.appendChild(img);
+  } else {
+    pristine.addError(fieldImages, errorMessage.getImageText());
+  }
 });
 
 const form = {
@@ -195,6 +240,8 @@ const form = {
       start: 1000,
       step: 1
     });
+    avatarImg.src = 'img/muffin-grey.svg';
+    photoContainer.innerHTML = '';
   },
 
   setAddress(coordinate) {
