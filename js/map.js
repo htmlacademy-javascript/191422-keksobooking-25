@@ -5,13 +5,13 @@ const CENTER_MAP = {
 
 class Map {
   constructor(canvasSelector) {
-    this._map = this._createMap(canvasSelector);
+    this._map = this._create(canvasSelector);
     this._markerGroup = L.layerGroup().addTo(this._map);
     this._mainPinMarker = this._addMainMarker();
     this._setTileLayers();
   }
 
-  _createMap(canvasSelector) {
+  _create(canvasSelector) {
     return L.map(canvasSelector);
   }
 

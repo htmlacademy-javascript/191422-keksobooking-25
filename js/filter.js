@@ -11,42 +11,6 @@ const PRICE_RANGE = {
   high: [50000, 100000]
 };
 
-const compareSelectValue = (select, offerValue) => select.value === 'any' || select.value === offerValue.toLowerCase();
-
-const comparePrice = (priceValue) => {
-  if(fieldPrice.value === 'any') {
-    return true;
-  }
-
-  const minPrice = PRICE_RANGE[fieldPrice.value][0];
-  const maxPrice = PRICE_RANGE[fieldPrice.value][1];
-
-  return minPrice <= priceValue && maxPrice >= priceValue;
-};
-
-const getFieldFeatureValue = () => {
-  const features = [];
-  fieldFeatures.forEach((checkbox) => {
-    if(checkbox.checked) {
-      features.push(checkbox.value);
-    }
-  });
-  return features;
-};
-
-const compareFeature = (offerFeatures, markedFeatures) => {
-  if(markedFeatures.length === 0) {
-    return true;
-  }
-
-  if(!offerFeatures) {
-    return false;
-  }
-
-  const result = offerFeatures.filter((feature) => !(markedFeatures.indexOf(feature) > -1));
-  return result.length === 0 && offerFeatures.length >= markedFeatures.length;
-};
-
 const filter = {
   _onfilterCallback: [],
 
@@ -60,19 +24,58 @@ const filter = {
     this._onfilterCallback.forEach((cb) => cb());
   },
 
+  _compareSelectValue(select, offerValue) {
+    return select.value === 'any' || select.value === offerValue.toString();
+  },
+
+  _comparePrice(priceValue) {
+    if(fieldPrice.value === 'any') {
+      return true;
+    }
+
+    const minPrice = PRICE_RANGE[fieldPrice.value][0];
+    const maxPrice = PRICE_RANGE[fieldPrice.value][1];
+
+    return minPrice <= priceValue && maxPrice >= priceValue;
+  },
+
+  _getSelectedFeatures() {
+    const features = [];
+
+    fieldFeatures.forEach((checkbox) => {
+      if(checkbox.checked) {
+        features.push(checkbox.value);
+      }
+    });
+
+    return features;
+  },
+
+  _isOfferIncludesSelectedFeatures(markedFeatures, offerFeatures) {
+    if(markedFeatures.length === 0) {
+      return true;
+    }
+
+    if(!offerFeatures) {
+      return false;
+    }
+
+    return markedFeatures.every((feature) => offerFeatures.includes(feature));
+  },
+
   onChange(cb) {
     this._onfilterCallback.push(cb);
   },
 
   check(dataOffers) {
-    const markedFeatures = getFieldFeatureValue();
+    const markedFeatures = this._getSelectedFeatures();
 
     return dataOffers.filter((dataOffer) =>
-      compareSelectValue(fieldType, dataOffer.offer.type) &&
-      compareSelectValue(fieldRooms, dataOffer.offer.rooms) &&
-      compareSelectValue(fieldGuests, dataOffer.offer.guests) &&
-      comparePrice(dataOffer.offer.price) &&
-      compareFeature(dataOffer.offer.features, markedFeatures));
+      this._compareSelectValue(fieldType, dataOffer.offer.type)
+      && this._compareSelectValue(fieldRooms, dataOffer.offer.rooms)
+      && this._compareSelectValue(fieldGuests, dataOffer.offer.guests)
+      && this._comparePrice(dataOffer.offer.price)
+      && this._isOfferIncludesSelectedFeatures(markedFeatures, dataOffer.offer.features));
   }
 };
 

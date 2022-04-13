@@ -9,7 +9,7 @@ const fieldCapacity = noticeForm.querySelector('#capacity');
 const fieldType = noticeForm.querySelector('#type');
 const fieldTimeIn = noticeForm.querySelector('#timein');
 const fieldTimeOut = noticeForm.querySelector('#timeout');
-const fieldAddress = document.querySelector('#address');
+const fieldAddress = noticeForm.querySelector('#address');
 const fieldAvatar = noticeForm.querySelector('#avatar');
 const fieldImages = noticeForm.querySelector('#images');
 const avatarImg = noticeForm.querySelector('.ad-form-header__preview img');
@@ -48,8 +48,8 @@ const unblockSubmitButton = () => {
 };
 
 const pristine = new Pristine(noticeForm, {
-  classTo: 'ad-form__element',
-  errorTextParent: 'ad-form__element',
+  classTo: 'validate-container',
+  errorTextParent: 'validate-container',
   errorTextClass: 'ad-form__element-error-text',
   errorTextTag: 'p',
 });
@@ -164,7 +164,7 @@ fieldAvatar.addEventListener('change', (evt) => {
   if (matches) {
     avatarImg.src = URL.createObjectURL(file);
   } else {
-    pristine.addError(fieldImages, errorMessage.getImageText());
+    pristine.addError(fieldAvatar, errorMessage.getImageText());
   }
 });
 
