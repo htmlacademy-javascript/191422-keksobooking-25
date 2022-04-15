@@ -3,9 +3,37 @@ const CENTER_MAP = {
   lng: 139.77938
 };
 
+const COPYRIGHT_MAP = {
+  url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  options: {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }
+};
+
+const PIN_ICON = {
+  main: {
+    iconUrl: './img/main-pin.svg',
+    iconSize: [52, 52],
+    iconAnchor: [26, 52]
+  },
+  offer: {
+    iconUrl: './img/pin.svg',
+    iconSize: [40, 40],
+    iconAnchor: [20, 40]
+  }
+};
+
 class Map {
   constructor(canvasSelector) {
     this._map = this._create(canvasSelector);
+    this._offerPinIcon = L.icon(PIN_ICON.offer);
+    this._mainPinIcon = L.icon(PIN_ICON.main);
+    this._mainPinMarker = L.marker(
+      CENTER_MAP, {
+        draggable: true,
+        icon: this._mainPinIcon
+      },
+    );
     this._markerGroup = L.layerGroup().addTo(this._map);
     this._mainPinMarker = this._addMainMarker();
     this._setTileLayers();
@@ -16,30 +44,12 @@ class Map {
   }
 
   _setTileLayers() {
-    const layersURL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    const options = {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    };
-    L.tileLayer(layersURL, options).addTo(this._map);
+    L.tileLayer(COPYRIGHT_MAP.url, COPYRIGHT_MAP.options).addTo(this._map);
   }
 
   _addMainMarker() {
-    const mainPinIcon = L.icon({
-      iconUrl: './img/main-pin.svg',
-      iconSize: [52, 52],
-      iconAnchor: [26, 52]
-    });
-
-    const mainPinMarker = L.marker(
-      CENTER_MAP, {
-        draggable: true,
-        icon: mainPinIcon
-      },
-    );
-
-    mainPinMarker.addTo(this._map);
-
-    return mainPinMarker;
+    this._mainPinMarker.addTo(this._map);
+    return this._mainPinMarker;
   }
 
   onLoad(cb) {
@@ -55,18 +65,8 @@ class Map {
   }
 
   addOfferMarkers(offers) {
-    const offerPinIcon = L.icon({
-      iconUrl: './img/pin.svg',
-      iconSize: [40, 40],
-      iconAnchor: [20, 40]
-    });
-
     const createMarker = (offer) => {
-      const marker = L.marker(
-        offer.location,
-        {offerPinIcon},
-      );
-
+      const marker = L.marker(offer.location, this._offerPinIcon);
       marker.addTo(this._markerGroup).bindPopup(offer.card);
     };
 

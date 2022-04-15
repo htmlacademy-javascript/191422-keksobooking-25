@@ -6,11 +6,11 @@ const getData = async (onSuccess, onError) => {
 
     if (response && response.ok) {
       return onSuccess(await response.json());
+    } else {
+      onError('Произошла ошибка загрузки данных, попробуйте обновить страницу');
     }
-
-    throw new Error(`${response.statusText} - Произошла ошибка, попробуйте перезагрузить страницу`);
   } catch (err) {
-    onError(err);
+    onError(`${err} - Не удалось загрузить данные, попробуйте обновить страницу`);
   }
 };
 

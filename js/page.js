@@ -1,21 +1,21 @@
-const noticeForm = document.querySelector('.ad-form');
-const filtersForm = document.querySelector('.map__filters');
+const noticeFormNode = document.querySelector('.ad-form');
+const filtersFormNode = document.querySelector('.map__filters');
 
 const page = {
   setInactive() {
-    noticeForm.classList.add('ad-form--disabled');
-    this._toggleDisabledElements(noticeForm.children);
+    noticeFormNode.classList.add('ad-form--disabled');
+    this._toggleDisabledElements(noticeFormNode.children);
 
-    filtersForm.classList.add('map__filters--disabled');
-    this._toggleDisabledElements(filtersForm.children);
+    filtersFormNode.classList.add('map__filters--disabled');
+    this._toggleDisabledElements(filtersFormNode.children);
   },
 
   setActive() {
-    noticeForm.classList.remove('ad-form--disabled');
-    this._toggleDisabledElements(noticeForm.children);
+    noticeFormNode.classList.remove('ad-form--disabled');
+    this._toggleDisabledElements(noticeFormNode.children);
 
-    filtersForm.classList.remove('map__filters--disabled');
-    this._toggleDisabledElements(filtersForm.children);
+    filtersFormNode.classList.remove('map__filters--disabled');
+    this._toggleDisabledElements(filtersFormNode.children);
   },
 
   _toggleDisabledElements(elements) {

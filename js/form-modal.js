@@ -1,7 +1,7 @@
 import {util} from './util.js';
 
-const modalSuccessTemplate = document.querySelector('#success').content.querySelector('.success');
-const modalErrorTemplate = document.querySelector('#error').content.querySelector('.error');
+const modalSuccessTemplateNode = document.querySelector('#success').content.querySelector('.success');
+const modalErrorTemplateNode = document.querySelector('#error').content.querySelector('.error');
 
 class FormModal {
   constructor(modalTemplate) {
@@ -28,7 +28,7 @@ class FormModal {
   }
 }
 
-const modalSuccess = new FormModal(modalSuccessTemplate);
-const modalError = new FormModal(modalErrorTemplate);
+const modalSuccess = new FormModal(modalSuccessTemplateNode);
+const modalError = new FormModal(modalErrorTemplateNode);
 
 export {modalSuccess, modalError};

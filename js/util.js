@@ -1,3 +1,5 @@
+const END_WORD_CASES = [2, 0, 1, 1, 1, 2];
+
 const util = {
   getRandomNumberInteger(a, b) {
     const minNum = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
@@ -16,14 +18,13 @@ const util = {
   },
 
   setEndWord(number, words) {
-    const cases = [2, 0, 1, 1, 1, 2];
     if (number % 100 > 4 && number % 100 < 20) {
       return words[2];
     }
     if (number % 10 < 5) {
-      return words[cases[number % 10]];
+      return words[END_WORD_CASES[number % 10]];
     }
-    return words[cases[5]];
+    return words[END_WORD_CASES[5]];
   },
 
   isEscapeKey(evt) {

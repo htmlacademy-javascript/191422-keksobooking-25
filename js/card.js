@@ -8,8 +8,8 @@ const OFFER_TYPES = {
   hotel: 'Отель'
 };
 
-const cardTemplate = document.querySelector('#card').content.querySelector('.popup');
-const cardPhotoTemplate = cardTemplate.querySelector('.popup__photo');
+const cardTemplateNode = document.querySelector('#card').content.querySelector('.popup');
+const cardPhotoTemplateNode = cardTemplateNode.querySelector('.popup__photo');
 
 const cardsGenerator = {
   createCards(offers) {
@@ -21,7 +21,7 @@ const cardsGenerator = {
   },
 
   createSingleCard(offer) {
-    const card = cardTemplate.cloneNode(true);
+    const card = cardTemplateNode.cloneNode(true);
     const author = offer.author;
     offer = offer.offer;
 
@@ -40,32 +40,32 @@ const cardsGenerator = {
   },
 
   setCardTitle(card, offer) {
-    const title = card.querySelector('.popup__title');
-    title.textContent = offer.title ? offer.title : 'Объявление';
+    const titleNode = card.querySelector('.popup__title');
+    titleNode.textContent = offer.title ? offer.title : 'Объявление';
   },
 
   setCardAddress(card, offer) {
-    const address = card.querySelector('.popup__text--address');
-    address.textContent = offer.address ? offer.address : 'Точный адрес не указан';
+    const addressNode = card.querySelector('.popup__text--address');
+    addressNode.textContent = offer.address ? offer.address : 'Точный адрес не указан';
   },
 
   setCardPrice(card, offer) {
-    const price = card.querySelector('.popup__text--price');
-    price.innerHTML = offer.price ? `${offer.price.toLocaleString()} <span>₽/ночь</span>` : 'Цена не указана';
+    const priceNode = card.querySelector('.popup__text--price');
+    priceNode.innerHTML = offer.price ? `${offer.price.toLocaleString()} <span>₽/ночь</span>` : 'Цена не указана';
   },
 
   setCardType(card, offer) {
-    const type = card.querySelector('.popup__type');
+    const typeNode = card.querySelector('.popup__type');
 
     if (offer.type && OFFER_TYPES[offer.type]) {
-      type.textContent = OFFER_TYPES[offer.type];
+      typeNode.textContent = OFFER_TYPES[offer.type];
     } else {
-      this._hideElement(type);
+      this._hideElement(typeNode);
     }
   },
 
   setCardCapacity(card, offer) {
-    const capacity = card.querySelector('.popup__text--capacity');
+    const capacityNode = card.querySelector('.popup__text--capacity');
     const result = [];
 
     if (offer.rooms) {
@@ -76,11 +76,11 @@ const cardsGenerator = {
       result.push(`для ${offer.guests} ${util.setEndWord(offer.guests, ['гостя', 'гостей', 'гостей'])}`);
     }
 
-    capacity.textContent = result.join(' ');
+    capacityNode.textContent = result.join(' ');
   },
 
   setCardTime(card, offer) {
-    const time = card.querySelector('.popup__text--time');
+    const timeNode = card.querySelector('.popup__text--time');
     const result = [];
 
     if (offer.checkin) {
@@ -91,16 +91,16 @@ const cardsGenerator = {
       result.push(`выезд до ${offer.checkout}`);
     }
 
-    time.textContent = result.join(', ');
+    timeNode.textContent = result.join(', ');
   },
 
   setCardFeatures(card, offer) {
-    const features = card.querySelector('.popup__features');
-    const featuresList = features.querySelectorAll('.popup__feature');
+    const featuresNode = card.querySelector('.popup__features');
+    const featuresListNode = featuresNode.querySelectorAll('.popup__feature');
 
     if (offer.features) {
       const featuresmModifiers = offer.features.map((feature) => `popup__feature--${feature}`);
-      featuresList.forEach((featureItem) => {
+      featuresListNode.forEach((featureItem) => {
         const modifier = featureItem.classList[1];
 
         if (!featuresmModifiers.includes(modifier)) {
@@ -108,43 +108,43 @@ const cardsGenerator = {
         }
       });
     } else {
-      this._hideElement(features);
+      this._hideElement(featuresNode);
     }
   },
 
   setCardDescription(card, offer) {
-    const description = card.querySelector('.popup__description');
+    const descriptionNode = card.querySelector('.popup__description');
 
     if (offer.description) {
-      description.textContent = offer.description;
+      descriptionNode.textContent = offer.description;
     } else {
-      this._hideElement(description);
+      this._hideElement(descriptionNode);
     }
   },
 
   setCardPhotos(card, offer) {
-    const photos = card.querySelector('.popup__photos');
+    const photosNode = card.querySelector('.popup__photos');
 
     if (offer.photos) {
       const cardPhotosFragment = document.createDocumentFragment();
 
-      photos.textContent = '';
+      photosNode.textContent = '';
 
       offer.photos.forEach((photoSrc) => {
-        const cardPhotoElement = cardPhotoTemplate.cloneNode(true);
+        const cardPhotoElement = cardPhotoTemplateNode.cloneNode(true);
         cardPhotoElement.src = photoSrc;
         cardPhotosFragment.appendChild(cardPhotoElement);
       });
 
-      photos.appendChild(cardPhotosFragment);
+      photosNode.appendChild(cardPhotosFragment);
     } else {
-      this._hideElement(photos);
+      this._hideElement(photosNode);
     }
   },
 
   setCardAvatar(card, author) {
-    const avatar = card.querySelector('.popup__avatar');
-    avatar.src = author.avatar ? author.avatar : 'img/avatars/default.png';
+    const avatarNode = card.querySelector('.popup__avatar');
+    avatarNode.src = author.avatar ? author.avatar : 'img/avatars/default.png';
   },
 
   _hideElement(element) {
