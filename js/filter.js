@@ -1,9 +1,9 @@
-const filterForm = document.querySelector('.map__filters');
-const fieldType = filterForm.querySelector('#housing-type');
-const fieldPrice = filterForm.querySelector('#housing-price');
-const fieldRooms = filterForm.querySelector('#housing-rooms');
-const fieldGuests = filterForm.querySelector('#housing-guests');
-const fieldFeatures = filterForm.querySelectorAll('[name="features"]');
+const filterFormNode = document.querySelector('.map__filters');
+const fieldTypeNode = filterFormNode.querySelector('#housing-type');
+const fieldPriceNode = filterFormNode.querySelector('#housing-price');
+const fieldRoomsNode = filterFormNode.querySelector('#housing-rooms');
+const fieldGuestsNode = filterFormNode.querySelector('#housing-guests');
+const fieldFeaturesNode = filterFormNode.querySelectorAll('[name="features"]');
 
 const PRICE_RANGE = {
   low: [0, 10000],
@@ -15,7 +15,7 @@ const filter = {
   _onfilterCallback: [],
 
   init() {
-    filterForm.addEventListener('change', () => {
+    filterFormNode.addEventListener('change', () => {
       this._onChangeFilter();
     });
   },
@@ -29,12 +29,12 @@ const filter = {
   },
 
   _comparePrice(priceValue) {
-    if(fieldPrice.value === 'any') {
+    if(fieldPriceNode.value === 'any') {
       return true;
     }
 
-    const minPrice = PRICE_RANGE[fieldPrice.value][0];
-    const maxPrice = PRICE_RANGE[fieldPrice.value][1];
+    const minPrice = PRICE_RANGE[fieldPriceNode.value][0];
+    const maxPrice = PRICE_RANGE[fieldPriceNode.value][1];
 
     return minPrice <= priceValue && maxPrice >= priceValue;
   },
@@ -42,7 +42,7 @@ const filter = {
   _getSelectedFeatures() {
     const features = [];
 
-    fieldFeatures.forEach((checkbox) => {
+    fieldFeaturesNode.forEach((checkbox) => {
       if(checkbox.checked) {
         features.push(checkbox.value);
       }
@@ -71,11 +71,15 @@ const filter = {
     const markedFeatures = this._getSelectedFeatures();
 
     return dataOffers.filter((dataOffer) =>
-      this._compareSelectValue(fieldType, dataOffer.offer.type)
-      && this._compareSelectValue(fieldRooms, dataOffer.offer.rooms)
-      && this._compareSelectValue(fieldGuests, dataOffer.offer.guests)
+      this._compareSelectValue(fieldTypeNode, dataOffer.offer.type)
+      && this._compareSelectValue(fieldRoomsNode, dataOffer.offer.rooms)
+      && this._compareSelectValue(fieldGuestsNode, dataOffer.offer.guests)
       && this._comparePrice(dataOffer.offer.price)
       && this._isOfferIncludesSelectedFeatures(markedFeatures, dataOffer.offer.features));
+  },
+
+  reset() {
+    filterFormNode.reset();
   }
 };
 

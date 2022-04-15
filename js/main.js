@@ -28,16 +28,23 @@ const init = async () => {
   };
 
   const activationPage = () => {
-    addOfferToMap(dataOffers);
+    if (dataOffers) {
+      addOfferToMap(dataOffers);
+      filter.init();
+    }
     form.setAddress(map.getCurrentPosition());
     form.init();
-    filter.init();
     page.setActive();
   };
 
   const resetPage = () => {
     form.reset();
     map.reset();
+    if (dataOffers) {
+      filter.reset();
+      map.removeOfferMarkers();
+      addOfferToMap(dataOffers);
+    }
     form.setAddress(map.getCurrentPosition());
   };
 
